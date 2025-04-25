@@ -1,0 +1,2146 @@
+<!DOCTYPE html>
+
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Book House - متجر الكتب الإلكتروني</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Custom CSS for shimmer effect and other enhancements */
+
+        .shimmer {
+
+            background: linear-gradient(to right, #f0f0f0 8%, #e0e0e0 18%, #f0f0f0 33%);
+
+            background-size: 800px 104px;
+
+            animation: shimmer 2s infinite linear;
+
+        }
+
+        @keyframes shimmer {
+
+            0% {
+                background-position: -468px 0
+            }
+
+            100% {
+                background-position: 468px 0
+            }
+
+        }
+
+        .book-card {
+
+            transition: all 0.3s ease;
+
+        }
+
+        .book-card:hover {
+
+            transform: translateY(-5px);
+
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+
+        }
+
+        .category-btn.active {
+
+            background-color: #4f46e5;
+
+            color: white;
+
+        }
+
+        /* Custom scrollbar */
+
+        ::-webkit-scrollbar {
+
+            width: 8px;
+
+        }
+
+        ::-webkit-scrollbar-track {
+
+            background: #f1f1f1;
+
+        }
+
+        ::-webkit-scrollbar-thumb {
+
+            background: #888;
+
+            border-radius: 4px;
+
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+
+            background: #555;
+
+        }
+
+        /* News accordion animation */
+
+        .news-accordion-content {
+
+            max-height: 0;
+
+            overflow: hidden;
+
+            transition: max-height 0.3s ease-out;
+
+        }
+
+        /* Modal animation */
+
+        .modal {
+
+            transition: opacity 0.3s ease, transform 0.3s ease;
+
+        }
+
+        .modal.show {
+
+            opacity: 1;
+
+            transform: translateY(0);
+
+        }
+    </style>
+
+</head>
+
+<body class="bg-gray-50 font-sans">
+
+    <!-- Header -->
+
+    <header class="bg-indigo-700 text-white shadow-lg sticky top-0 z-50">
+
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+
+            <div class="flex items-center space-x-2">
+
+                <i class="fas fa-book-open text-2xl"></i>
+
+                <h1 class="text-2xl font-bold">Book House</h1>
+
+            </div>
+
+            <div class="hidden md:flex items-center space-x-6">
+
+                <a href="#home" class="hover:text-indigo-200 transition">الرئيسية</a>
+
+                <a href="#books" class="hover:text-indigo-200 transition">الكتب</a>
+
+                <a href="#news" class="hover:text-indigo-200 transition">الأخبار</a>
+
+                <a href="#about" class="hover:text-indigo-200 transition">من نحن</a>
+
+            </div>
+
+            <div class="flex items-center space-x-4">
+
+                <button id="search-btn" class="p-2 rounded-full hover:bg-indigo-600 transition">
+
+                    <i class="fas fa-search"></i>
+
+                </button>
+
+                <button id="cart-btn" class="relative p-2 rounded-full hover:bg-indigo-600 transition">
+
+                    <i class="fas fa-shopping-cart"></i>
+
+                    <span id="cart-count"
+                        class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+
+                </button>
+
+                <button id="favorites-btn" class="p-2 rounded-full hover:bg-indigo-600 transition">
+
+                    <i class="fas fa-heart"></i>
+
+                </button>
+
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-full hover:bg-indigo-600 transition">
+
+                    <i class="fas fa-bars"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- Mobile Menu -->
+
+        <div id="mobile-menu" class="hidden md:hidden bg-indigo-600 px-4 py-2">
+
+            <div class="flex flex-col space-y-2">
+
+                <a href="#home" class="hover:text-indigo-200 transition py-1">الرئيسية</a>
+
+                <a href="#books" class="hover:text-indigo-200 transition py-1">الكتب</a>
+
+                <a href="#news" class="hover:text-indigo-200 transition py-1">الأخبار</a>
+
+                <a href="#about" class="hover:text-indigo-200 transition py-1">من نحن</a>
+
+            </div>
+
+        </div>
+
+        <!-- Search Bar -->
+
+        <div id="search-bar" class="hidden bg-indigo-800 px-4 py-3">
+
+            <div class="container mx-auto flex items-center">
+
+                <input type="text" id="search-input" placeholder="ابحث عن كتاب أو مؤلف..."
+                    class="flex-1 px-4 py-2 rounded-r-lg focus:outline-none text-gray-800">
+
+                <button class="bg-indigo-600 text-white px-4 py-2 rounded-l-lg hover:bg-indigo-500 transition">
+
+                    <i class="fas fa-search"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- Hero Section -->
+
+    <section id="home" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-16">
+
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
+
+            <div class="md:w-1/2 mb-8 md:mb-0">
+
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">اكتشف عالم الكتب مع Book House</h2>
+
+                <p class="text-xl mb-6">أكبر مجموعة من الكتب في مختلف المجالات والتصنيفات</p>
+
+                <div class="flex space-x-4">
+
+                    <a href="#books"
+                        class="bg-white text-indigo-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition">تصفح
+                        الكتب</a>
+
+                    <a href="#new-arrivals"
+                        class="border-2 border-white px-6 py-3 rounded-lg font-medium hover:bg-white hover:text-indigo-700 transition">وصل
+                        حديثاً</a>
+
+                </div>
+
+            </div>
+
+            <div class="md:w-1/2 flex justify-center">
+
+                <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                    alt="Books" class="rounded-lg shadow-2xl max-w-full h-auto md:h-96 object-cover">
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Main Content -->
+
+    <main class="container mx-auto px-4 py-8">
+
+        <!-- Categories -->
+
+        <section class="mb-12">
+
+            <h2 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">تصنيفات الكتب</h2>
+
+            <div id="categories" class="flex flex-wrap gap-2 mb-6">
+
+                <!-- Categories will be loaded here -->
+
+                <div class="shimmer h-10 w-20 rounded-lg"></div>
+
+                <div class="shimmer h-10 w-24 rounded-lg"></div>
+
+                <div class="shimmer h-10 w-16 rounded-lg"></div>
+
+                <div class="shimmer h-10 w-20 rounded-lg"></div>
+
+                <div class="shimmer h-10 w-24 rounded-lg"></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- New Arrivals -->
+
+        <section id="new-arrivals" class="mb-12">
+
+            <div class="flex justify-between items-center mb-6">
+
+                <h2 class="text-2xl font-bold text-gray-800">وصل حديثاً</h2>
+
+                <a href="#books" class="text-indigo-600 hover:text-indigo-800 transition">عرض الكل</a>
+
+            </div>
+
+            <div id="new-arrivals-books" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+
+                <!-- New arrivals books will be loaded here -->
+
+                <div class="book-card shimmer rounded-lg h-64"></div>
+
+                <div class="book-card shimmer rounded-lg h-64"></div>
+
+                <div class="book-card shimmer rounded-lg h-64"></div>
+
+                <div class="book-card shimmer rounded-lg h-64"></div>
+
+                <div class="book-card shimmer rounded-lg h-64"></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- All Books -->
+
+        <section id="books" class="mb-12">
+
+            <h2 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">جميع الكتب</h2>
+
+            <div id="books-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+                <!-- Books will be loaded here -->
+
+                <div class="book-card shimmer rounded-lg h-80"></div>
+
+                <div class="book-card shimmer rounded-lg h-80"></div>
+
+                <div class="book-card shimmer rounded-lg h-80"></div>
+
+                <div class="book-card shimmer rounded-lg h-80"></div>
+
+                <div class="book-card shimmer rounded-lg h-80"></div>
+
+                <div class="book-card shimmer rounded-lg h-80"></div>
+
+                <div class="book-card shimmer rounded-lg h-80"></div>
+
+                <div class="book-card shimmer rounded-lg h-80"></div>
+
+            </div>
+
+            <!-- Pagination -->
+
+            <div id="pagination" class="flex justify-center mt-8">
+
+                <button class="px-4 py-2 bg-gray-200 rounded-l-lg hover:bg-gray-300 transition">السابق</button>
+
+                <button class="px-4 py-2 bg-indigo-600 text-white">1</button>
+
+                <button class="px-4 py-2 bg-gray-200 hover:bg-gray-300 transition">2</button>
+
+                <button class="px-4 py-2 bg-gray-200 hover:bg-gray-300 transition">3</button>
+
+                <button class="px-4 py-2 bg-gray-200 rounded-r-lg hover:bg-gray-300 transition">التالي</button>
+
+            </div>
+
+        </section>
+
+
+        <!-- News Section -->
+
+        <section id="news" class="mb-12">
+
+            <h2 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">آخر الأخبار</h2>
+
+            <div id="news-container" class="space-y-4">
+
+                <!-- News will be loaded here -->
+
+                <div class="shimmer h-24 rounded-lg"></div>
+
+                <div class="shimmer h-24 rounded-lg"></div>
+
+                <div class="shimmer h-24 rounded-lg"></div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Footer -->
+
+    <footer class="bg-gray-800 text-white py-8">
+
+        <div class="container mx-auto px-4">
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+
+                <div>
+
+                    <h3 class="text-xl font-bold mb-4">Book House</h3>
+
+                    <p class="text-gray-300">وجهتك الأولى لشراء الكتب الإلكترونية والورقية بأفضل الأسعار.</p>
+
+                </div>
+
+                <div>
+
+                    <h4 class="text-lg font-semibold mb-4">روابط سريعة</h4>
+
+                    <ul class="space-y-2">
+
+                        <li><a href="#home" class="text-gray-300 hover:text-white transition">الرئيسية</a></li>
+
+                        <li><a href="#books" class="text-gray-300 hover:text-white transition">الكتب</a></li>
+
+                        <li><a href="#news" class="text-gray-300 hover:text-white transition">الأخبار</a></li>
+
+                        <li><a href="#about" class="text-gray-300 hover:text-white transition">من نحن</a></li>
+
+                    </ul>
+
+                </div>
+
+                <div>
+
+                    <h4 class="text-lg font-semibold mb-4">تواصل معنا</h4>
+
+                    <ul class="space-y-2">
+
+                        <li class="flex items-center space-x-2">
+
+                            <i class="fas fa-phone"></i>
+
+                            <span>+967 772 492 426</span>
+
+                        </li>
+
+                        <li class="flex items-center space-x-2">
+
+                            <i class="fas fa-envelope"></i>
+
+                            <span>info@bookhouse.com</span>
+
+                        </li>
+
+                        <li class="flex items-center space-x-2">
+
+                            <i class="fas fa-map-marker-alt"></i>
+
+                            <span>صنعاء، اليمن</span>
+
+                        </li>
+
+                    </ul>
+
+                </div>
+
+                <div>
+
+                    <h4 class="text-lg font-semibold mb-4">تابعنا</h4>
+
+                    <div class="flex space-x-4">
+
+                        <a href="#" class="text-gray-300 hover:text-white transition text-xl"><i
+                                class="fab fa-facebook"></i></a>
+
+                        <a href="#" class="text-gray-300 hover:text-white transition text-xl"><i
+                                class="fab fa-twitter"></i></a>
+
+                        <a href="#" class="text-gray-300 hover:text-white transition text-xl"><i
+                                class="fab fa-instagram"></i></a>
+
+                        <a href="#" class="text-gray-300 hover:text-white transition text-xl"><i
+                                class="fab fa-whatsapp"></i></a>
+
+                    </div>
+
+                    <div class="mt-4">
+
+                        <p class="text-gray-300">اشترك في نشرتنا البريدية</p>
+
+                        <div class="flex mt-2">
+
+                            <input type="email" placeholder="بريدك الإلكتروني"
+                                class="px-3 py-2 rounded-r-lg focus:outline-none text-gray-800 flex-1">
+
+                            <button
+                                class="bg-indigo-600 text-white px-4 py-2 rounded-l-lg hover:bg-indigo-500 transition">
+
+                                <i class="fas fa-paper-plane"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">
+
+                <p>© 2023 Book House. جميع الحقوق محفوظة.</p>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <!-- Book Details Modal -->
+
+    <div id="book-modal"
+        class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none">
+
+        <div class="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+
+            <div class="p-6">
+
+                <div class="flex justify-between items-start mb-4">
+
+                    <h3 id="modal-book-title" class="text-2xl font-bold text-gray-800"></h3>
+
+                    <button id="close-modal" class="text-gray-500 hover:text-gray-700 transition">
+
+                        <i class="fas fa-times text-xl"></i>
+
+                    </button>
+
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-6">
+
+                    <div class="md:w-1/3">
+
+                        <img id="modal-book-image" src="" alt="Book Cover" class="w-full h-auto rounded-lg shadow-md">
+
+                    </div>
+
+                    <div class="md:w-2/3">
+
+                        <div class="flex items-center justify-between mb-4">
+
+                            <span id="modal-book-author" class="text-lg text-gray-600"></span>
+
+                            <span id="modal-book-price" class="text-xl font-bold text-indigo-600"></span>
+
+                        </div>
+
+                        <p id="modal-book-description" class="text-gray-700 mb-4"></p>
+
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+
+                            <div>
+
+                                <span class="block text-sm text-gray-500">التصنيف</span>
+
+                                <span id="modal-book-category" class="font-medium"></span>
+
+                            </div>
+
+                            <div>
+
+                                <span class="block text-sm text-gray-500">سنة النشر</span>
+
+                                <span id="modal-book-year" class="font-medium"></span>
+
+                            </div>
+
+                            <div>
+
+                                <span class="block text-sm text-gray-500">عدد الصفحات</span>
+
+                                <span id="modal-book-pages" class="font-medium"></span>
+
+                            </div>
+
+                            <div>
+
+                                <span class="block text-sm text-gray-500">رقم ISBN</span>
+
+                                <span id="modal-book-isbn" class="font-medium"></span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="flex items-center space-x-4">
+
+                            <div class="flex items-center border rounded-lg overflow-hidden">
+
+                                <button class="px-3 py-1 bg-gray-200 hover:bg-gray-300 transition"
+                                    id="decrease-qty">-</button>
+
+                                <span class="px-4 py-1" id="book-qty">1</span>
+
+                                <button class="px-3 py-1 bg-gray-200 hover:bg-gray-300 transition"
+                                    id="increase-qty">+</button>
+
+                            </div>
+
+                            <button id="add-to-cart-modal"
+                                class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-500 transition flex items-center space-x-2">
+
+                                <i class="fas fa-shopping-cart"></i>
+
+                                <span>أضف إلى السلة</span>
+
+                            </button>
+
+                            <button id="add-to-favorites-modal"
+                                class="border border-indigo-600 text-indigo-600 px-4 py-2 rounded-lg hover:bg-indigo-50 transition">
+
+                                <i class="far fa-heart"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Cart Sidebar -->
+
+    <div id="cart-sidebar"
+        class="fixed top-0 right-0 h-full w-full md:w-96 bg-white shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out z-50">
+
+        <div class="p-4 h-full flex flex-col">
+
+            <div class="flex justify-between items-center border-b pb-4">
+
+                <h3 class="text-xl font-bold">سلة المشتريات</h3>
+
+                <button id="close-cart" class="text-gray-500 hover:text-gray-700 transition">
+
+                    <i class="fas fa-times text-xl"></i>
+
+                </button>
+
+            </div>
+
+            <div id="cart-items" class="flex-1 overflow-y-auto py-4 space-y-4">
+
+                <!-- Cart items will be loaded here -->
+
+                <p class="text-gray-500 text-center py-8">سلة المشتريات فارغة</p>
+
+            </div>
+
+            <div class="border-t pt-4">
+
+                <div class="flex justify-between mb-4">
+
+                    <span class="font-medium">المجموع:</span>
+
+                    <span id="cart-total" class="font-bold">0 ر.ي</span>
+
+                </div>
+
+                <button id="checkout-btn"
+                    class="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-500 transition flex items-center justify-center space-x-2">
+
+                    <i class="fas fa-whatsapp"></i>
+
+                    <span>إتمام الشراء عبر واتساب</span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Favorites Sidebar -->
+
+    <div id="favorites-sidebar"
+        class="fixed top-0 right-0 h-full w-full md:w-96 bg-white shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out z-50">
+
+        <div class="p-4 h-full flex flex-col">
+
+            <div class="flex justify-between items-center border-b pb-4">
+
+                <h3 class="text-xl font-bold">كتبي المفضلة</h3>
+
+                <button id="close-favorites" class="text-gray-500 hover:text-gray-700 transition">
+
+                    <i class="fas fa-times text-xl"></i>
+
+                </button>
+
+            </div>
+
+            <div id="favorites-items" class="flex-1 overflow-y-auto py-4 space-y-4">
+
+                <!-- Favorites items will be loaded here -->
+
+                <p class="text-gray-500 text-center py-8">لا توجد كتب في المفضلة</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- News Modal -->
+
+    <div id="news-modal"
+        class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none">
+
+        <div class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+
+            <div class="p-6">
+
+                <div class="flex justify-between items-start mb-4">
+
+                    <h3 id="modal-news-title" class="text-2xl font-bold text-gray-800"></h3>
+
+                    <button id="close-news-modal" class="text-gray-500 hover:text-gray-700 transition">
+
+                        <i class="fas fa-times text-xl"></i>
+
+                    </button>
+
+                </div>
+
+                <div class="text-sm text-gray-500 mb-4">
+
+                    <span id="modal-news-date"></span>
+
+                </div>
+
+                <div id="modal-news-content" class="text-gray-700 space-y-4"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        // Strapi API Configuration
+
+        const API_BASE_URL = 'https://your-strapi-instance.com/api';
+
+        const API_TOKEN = 'your-strapi-api-token';
+
+        // DOM Elements
+
+        const searchBtn = document.getElementById('search-btn');
+
+        const searchBar = document.getElementById('search-bar');
+
+        const searchInput = document.getElementById('search-input');
+
+        const cartBtn = document.getElementById('cart-btn');
+
+        const cartSidebar = document.getElementById('cart-sidebar');
+
+        const closeCart = document.getElementById('close-cart');
+
+        const favoritesBtn = document.getElementById('favorites-btn');
+
+        const favoritesSidebar = document.getElementById('favorites-sidebar');
+
+        const closeFavorites = document.getElementById('close-favorites');
+
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        const bookModal = document.getElementById('book-modal');
+
+        const closeModal = document.getElementById('close-modal');
+
+        const newsModal = document.getElementById('news-modal');
+
+        const closeNewsModal = document.getElementById('close-news-modal');
+
+        const checkoutBtn = document.getElementById('checkout-btn');
+
+        // State
+
+        let currentBooks = [];
+
+        let currentCategories = [];
+
+        let currentNews = [];
+
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+        // Initialize the app
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // Load initial data
+
+            fetchCategories();
+
+            fetchBooks();
+
+            fetchNews();
+
+            fetchNewArrivals();
+
+            // Update cart count
+
+            updateCartCount();
+
+            // Load favorites from localStorage
+
+            renderFavorites();
+
+            // Event listeners
+
+            setupEventListeners();
+
+        });
+
+        // Setup event listeners
+
+        function setupEventListeners() {
+
+            // Search toggle
+
+            searchBtn.addEventListener('click', () => {
+
+                searchBar.classList.toggle('hidden');
+
+                if (!searchBar.classList.contains('hidden')) {
+
+                    searchInput.focus();
+
+                }
+
+            });
+
+            // Search functionality
+
+            searchInput.addEventListener('input', debounce(() => {
+
+                const searchTerm = searchInput.value.trim();
+
+                if (searchTerm.length > 0) {
+
+                    searchBooks(searchTerm);
+
+                } else {
+
+                    fetchBooks();
+
+                }
+
+            }, 300));
+
+            // Cart toggle
+
+            cartBtn.addEventListener('click', () => {
+
+                cartSidebar.classList.remove('translate-x-full');
+
+                renderCartItems();
+
+            });
+
+            closeCart.addEventListener('click', () => {
+
+                cartSidebar.classList.add('translate-x-full');
+
+            });
+
+            // Favorites toggle
+
+            favoritesBtn.addEventListener('click', () => {
+
+                favoritesSidebar.classList.remove('translate-x-full');
+
+            });
+
+            closeFavorites.addEventListener('click', () => {
+
+                favoritesSidebar.classList.add('translate-x-full');
+
+            });
+
+            // Mobile menu toggle
+
+            mobileMenuBtn.addEventListener('click', () => {
+
+                mobileMenu.classList.toggle('hidden');
+
+            });
+
+            // Close modal
+
+            closeModal.addEventListener('click', () => {
+
+                bookModal.classList.remove('show');
+
+                bookModal.classList.add('opacity-0');
+
+                bookModal.classList.add('pointer-events-none');
+
+            });
+
+            // Close news modal
+
+            closeNewsModal.addEventListener('click', () => {
+
+                newsModal.classList.remove('show');
+
+                newsModal.classList.add('opacity-0');
+
+                newsModal.classList.add('pointer-events-none');
+
+            });
+
+            // Checkout via WhatsApp
+
+            checkoutBtn.addEventListener('click', proceedToCheckout);
+
+        }
+
+        // Fetch categories from Strapi API
+
+        async function fetchCategories() {
+
+            try {
+
+                const response = await fetch(`${API_BASE_URL}/categories?populate=*`, {
+
+                    headers: {
+
+                        'Authorization': `Bearer ${API_TOKEN}`
+
+                    }
+
+                });
+
+                const data = await response.json();
+
+                if (data.data) {
+
+                    currentCategories = data.data;
+
+                    renderCategories();
+
+                }
+
+            } catch (error) {
+
+                console.error('Error fetching categories:', error);
+
+            }
+
+        }
+
+        // Render categories
+
+        function renderCategories() {
+
+            const categoriesContainer = document.getElementById('categories');
+
+            categoriesContainer.innerHTML = '';
+
+            // Add "All" category button
+
+            const allButton = document.createElement('button');
+
+            allButton.className = 'category-btn active px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition';
+
+            allButton.textContent = 'الكل';
+
+            allButton.addEventListener('click', () => {
+
+                document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+
+                allButton.classList.add('active');
+
+                fetchBooks();
+
+            });
+
+            categoriesContainer.appendChild(allButton);
+
+            // Add other categories
+
+            currentCategories.forEach(category => {
+
+                const button = document.createElement('button');
+
+                button.className = 'category-btn px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition';
+
+                button.textContent = category.attributes.name;
+
+                button.addEventListener('click', () => {
+
+                    document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+
+                    button.classList.add('active');
+
+                    filterBooksByCategory(category.id);
+
+                });
+
+                categoriesContainer.appendChild(button);
+
+            });
+
+        }
+
+        // Fetch books from Strapi API
+
+        async function fetchBooks() {
+
+            const booksContainer = document.getElementById('books-container');
+
+            booksContainer.innerHTML = '';
+
+            // Show shimmer loading
+
+            for (let i = 0; i < 8; i++) {
+
+                const shimmerDiv = document.createElement('div');
+
+                shimmerDiv.className = 'book-card shimmer rounded-lg h-80';
+
+                booksContainer.appendChild(shimmerDiv);
+
+            }
+
+            try {
+
+                const response = await fetch(`${API_BASE_URL}/books?populate=*`, {
+
+                    headers: {
+
+                        'Authorization': `Bearer ${API_TOKEN}`
+
+                    }
+
+                });
+
+                const data = await response.json();
+
+                if (data.data) {
+
+                    currentBooks = data.data;
+
+                    renderBooks(currentBooks);
+
+                }
+
+            } catch (error) {
+
+                console.error('Error fetching books:', error);
+
+                booksContainer.innerHTML = '<p class="text-red-500 text-center col-span-4">حدث خطأ أثناء جلب البيانات. يرجى المحاولة لاحقاً.</p>';
+
+            }
+
+        }
+
+        // Fetch new arrivals from Strapi API
+
+        async function fetchNewArrivals() {
+
+            const newArrivalsContainer = document.getElementById('new-arrivals-books');
+
+            newArrivalsContainer.innerHTML = '';
+
+            // Show shimmer loading
+
+            for (let i = 0; i < 5; i++) {
+
+                const shimmerDiv = document.createElement('div');
+
+                shimmerDiv.className = 'book-card shimmer rounded-lg h-64';
+
+                newArrivalsContainer.appendChild(shimmerDiv);
+
+            }
+
+            try {
+
+                const response = await fetch(`${API_BASE_URL}/books?filters[isNew][$eq]=true&populate=*`, {
+
+                    headers: {
+
+                        'Authorization': `Bearer ${API_TOKEN}`
+
+                    }
+
+                });
+
+                const data = await response.json();
+
+                if (data.data) {
+
+                    renderNewArrivals(data.data);
+
+                }
+
+            } catch (error) {
+
+                console.error('Error fetching new arrivals:', error);
+
+                newArrivalsContainer.innerHTML = '<p class="text-red-500 text-center col-span-5">حدث خطأ أثناء جلب الكتب الجديدة.</p>';
+
+            }
+
+        }
+
+        // Render books
+
+        function renderBooks(books) {
+
+            const booksContainer = document.getElementById('books-container');
+
+            booksContainer.innerHTML = '';
+
+            if (books.length === 0) {
+
+                booksContainer.innerHTML = '<p class="text-gray-500 text-center col-span-4">لا توجد كتب متاحة حالياً.</p>';
+
+                return;
+
+            }
+
+            books.forEach(book => {
+
+                const bookCard = createBookCard(book);
+
+                booksContainer.appendChild(bookCard);
+
+            });
+
+        }
+
+        // Render new arrivals
+
+        function renderNewArrivals(books) {
+
+            const newArrivalsContainer = document.getElementById('new-arrivals-books');
+
+            newArrivalsContainer.innerHTML = '';
+
+            if (books.length === 0) {
+
+                newArrivalsContainer.innerHTML = '<p class="text-gray-500 text-center col-span-5">لا توجد كتب جديدة حالياً.</p>';
+
+                return;
+
+            }
+
+            books.slice(0, 5).forEach(book => {
+
+                const bookCard = createBookCard(book, true);
+
+                newArrivalsContainer.appendChild(bookCard);
+
+            });
+
+        }
+
+        // Create book card element
+
+        function createBookCard(book, isNewArrival = false) {
+
+            const bookCard = document.createElement('div');
+
+            bookCard.className = 'book-card bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full';
+
+            const bookImage = book.attributes.cover_image?.data?.attributes?.url
+
+                ? `https://your-strapi-instance.com${book.attributes.cover_image.data.attributes.url}`
+
+                : 'https://via.placeholder.com/300x400?text=No+Cover';
+
+            const isFavorite = favorites.some(fav => fav.id === book.id);
+
+            bookCard.innerHTML = `
+
+<div class="relative">
+
+<img src="${bookImage}" alt="${book.attributes.title}" class="w-full h-48 object-cover">
+
+${isNewArrival ? '<span class="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">وصل حديثاً</span>' : ''}
+
+<button class="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md favorite-btn ${isFavorite ? 'text-red-500' : 'text-gray-400'} hover:text-red-500 transition" data-book-id="${book.id}">
+
+<i class="${isFavorite ? 'fas' : 'far'} fa-heart"></i>
+
+</button>
+
+</div>
+
+<div class="p-4 flex-1 flex flex-col">
+
+<h3 class="font-bold text-lg mb-1 text-gray-800">${book.attributes.title}</h3>
+
+<p class="text-gray-600 text-sm mb-2">${book.attributes.author}</p>
+
+<p class="text-gray-700 text-sm mb-4 line-clamp-2">${book.attributes.description || 'لا يوجد وصف متاح'}</p>
+
+<div class="mt-auto flex justify-between items-center">
+
+<span class="font-bold text-indigo-600">${book.attributes.price} ر.ي</span>
+
+<button class="view-details-btn bg-indigo-600 text-white px-3 py-1 rounded text-sm hover:bg-indigo-500 transition" data-book-id="${book.id}">
+
+التفاصيل
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+            // Add event listeners
+
+            const viewDetailsBtn = bookCard.querySelector('.view-details-btn');
+
+            viewDetailsBtn.addEventListener('click', () => showBookDetails(book.id));
+
+            const favoriteBtn = bookCard.querySelector('.favorite-btn');
+
+            favoriteBtn.addEventListener('click', (e) => {
+
+                e.stopPropagation();
+
+                toggleFavorite(book);
+
+            });
+
+            return bookCard;
+
+        }
+
+        // Filter books by category
+
+        async function filterBooksByCategory(categoryId) {
+
+            const booksContainer = document.getElementById('books-container');
+
+            booksContainer.innerHTML = '';
+
+            // Show shimmer loading
+
+            for (let i = 0; i < 8; i++) {
+
+                const shimmerDiv = document.createElement('div');
+
+                shimmerDiv.className = 'book-card shimmer rounded-lg h-80';
+
+                booksContainer.appendChild(shimmerDiv);
+
+            }
+
+            try {
+
+                const response = await fetch(`${API_BASE_URL}/books?filters[categories][id][$eq]=${categoryId}&populate=*`, {
+
+                    headers: {
+
+                        'Authorization': `Bearer ${API_TOKEN}`
+
+                    }
+
+                });
+
+                const data = await response.json();
+
+                if (data.data) {
+
+                    renderBooks(data.data);
+
+                }
+
+            } catch (error) {
+
+                console.error('Error filtering books:', error);
+
+                booksContainer.innerHTML = '<p class="text-red-500 text-center col-span-4">حدث خطأ أثناء تصفية الكتب. يرجى المحاولة لاحقاً.</p>';
+
+            }
+
+        }
+
+        // Search books
+
+        async function searchBooks(query) {
+
+            const booksContainer = document.getElementById('books-container');
+
+            booksContainer.innerHTML = '';
+
+            // Show shimmer loading
+
+            for (let i = 0; i < 8; i++) {
+
+                const shimmerDiv = document.createElement('div');
+
+                shimmerDiv.className = 'book-card shimmer rounded-lg h-80';
+
+                booksContainer.appendChild(shimmerDiv);
+
+            }
+
+            try {
+
+                const response = await fetch(`${API_BASE_URL}/books?filters[$or][0][title][$contains]=${query}&filters[$or][1][author][$contains]=${query}&populate=*`, {
+
+                    headers: {
+
+                        'Authorization': `Bearer ${API_TOKEN}`
+
+                    }
+
+                });
+
+                const data = await response.json();
+
+                if (data.data) {
+
+                    renderBooks(data.data);
+
+                }
+
+            } catch (error) {
+
+                console.error('Error searching books:', error);
+
+                booksContainer.innerHTML = '<p class="text-red-500 text-center col-span-4">حدث خطأ أثناء البحث. يرجى المحاولة لاحقاً.</p>';
+
+            }
+
+        }
+
+        // Show book details in modal
+
+        async function showBookDetails(bookId) {
+
+            const book = currentBooks.find(b => b.id == bookId) ||
+
+                (await fetchBookDetails(bookId));
+
+            if (!book) return;
+
+            // Set modal content
+
+            document.getElementById('modal-book-title').textContent = book.attributes.title;
+
+            document.getElementById('modal-book-author').textContent = book.attributes.author;
+
+            document.getElementById('modal-book-price').textContent = `${book.attributes.price} ر.ي`;
+
+            document.getElementById('modal-book-description').textContent = book.attributes.description || 'لا يوجد وصف متاح';
+
+            const category = currentCategories.find(c => c.id == book.attributes.categories?.data[0]?.id);
+
+            document.getElementById('modal-book-category').textContent = category?.attributes.name || 'غير محدد';
+
+            document.getElementById('modal-book-year').textContent = book.attributes.year || 'غير معروف';
+
+            document.getElementById('modal-book-pages').textContent = book.attributes.pages || 'غير معروف';
+
+            document.getElementById('modal-book-isbn').textContent = book.attributes.isbn || 'غير متاح';
+
+            const bookImage = book.attributes.cover_image?.data?.attributes?.url
+
+                ? `https://your-strapi-instance.com${book.attributes.cover_image.data.attributes.url}`
+
+                : 'https://via.placeholder.com/300x400?text=No+Cover';
+
+            document.getElementById('modal-book-image').src = bookImage;
+
+            // Reset quantity
+
+            document.getElementById('book-qty').textContent = '1';
+
+            // Check if book is in favorites
+
+            const isFavorite = favorites.some(fav => fav.id === book.id);
+
+            const favoriteBtn = document.getElementById('add-to-favorites-modal');
+
+            favoriteBtn.innerHTML = `<i class="${isFavorite ? 'fas' : 'far'} fa-heart"></i>`;
+
+            // Set event listeners for modal buttons
+
+            favoriteBtn.onclick = () => toggleFavorite(book);
+
+            document.getElementById('add-to-cart-modal').onclick = () => addToCart(book);
+
+            // Quantity controls
+
+            document.getElementById('increase-qty').onclick = () => {
+
+                const qtyElement = document.getElementById('book-qty');
+
+                let qty = parseInt(qtyElement.textContent);
+
+                qtyElement.textContent = qty + 1;
+
+            };
+
+            document.getElementById('decrease-qty').onclick = () => {
+
+                const qtyElement = document.getElementById('book-qty');
+
+                let qty = parseInt(qtyElement.textContent);
+
+                if (qty > 1) {
+
+                    qtyElement.textContent = qty - 1;
+
+                }
+
+            };
+
+            // Show modal
+
+            bookModal.classList.remove('opacity-0');
+
+            bookModal.classList.remove('pointer-events-none');
+
+            bookModal.classList.add('show');
+
+        }
+
+        // Fetch single book details
+
+        async function fetchBookDetails(bookId) {
+
+            try {
+
+                const response = await fetch(`${API_BASE_URL}/books/${bookId}?populate=*`, {
+
+                    headers: {
+
+                        'Authorization': `Bearer ${API_TOKEN}`
+
+                    }
+
+                });
+
+                const data = await response.json();
+
+                return data.data;
+
+            } catch (error) {
+
+                console.error('Error fetching book details:', error);
+
+                return null;
+
+            }
+
+        }
+
+        // Toggle book favorite status
+
+        function toggleFavorite(book) {
+
+            const index = favorites.findIndex(fav => fav.id === book.id);
+
+            if (index === -1) {
+
+                // Add to favorites
+
+                favorites.push({
+
+                    id: book.id,
+
+                    title: book.attributes.title,
+
+                    author: book.attributes.author,
+
+                    price: book.attributes.price,
+
+                    image: book.attributes.cover_image?.data?.attributes?.url
+
+                        ? `https://your-strapi-instance.com${book.attributes.cover_image.data.attributes.url}`
+
+                        : 'https://via.placeholder.com/300x400?text=No+Cover'
+
+                });
+
+            } else {
+
+                // Remove from favorites
+
+                favorites.splice(index, 1);
+
+            }
+
+            // Update localStorage
+
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+
+            // Update favorite button in modal
+
+            const favoriteBtn = document.getElementById('add-to-favorites-modal');
+
+            if (favoriteBtn) {
+
+                favoriteBtn.innerHTML = `<i class="${index === -1 ? 'fas' : 'far'} fa-heart"></i>`;
+
+            }
+
+            // Update favorite buttons in book cards
+
+            document.querySelectorAll(`.favorite-btn[data-book-id="${book.id}"]`).forEach(btn => {
+
+                const icon = btn.querySelector('i');
+
+                if (index === -1) {
+
+                    btn.classList.add('text-red-500');
+
+                    btn.classList.remove('text-gray-400');
+
+                    icon.classList.add('fas');
+
+                    icon.classList.remove('far');
+
+                } else {
+
+                    btn.classList.remove('text-red-500');
+
+                    btn.classList.add('text-gray-400');
+
+                    icon.classList.add('far');
+
+                    icon.classList.remove('fas');
+
+                }
+
+            });
+
+            // Update favorites sidebar if open
+
+            if (!favoritesSidebar.classList.contains('translate-x-full')) {
+
+                renderFavorites();
+
+            }
+
+        }
+
+        // Render favorites in sidebar
+
+        function renderFavorites() {
+
+            const favoritesContainer = document.getElementById('favorites-items');
+
+            favoritesContainer.innerHTML = '';
+
+            if (favorites.length === 0) {
+
+                favoritesContainer.innerHTML = '<p class="text-gray-500 text-center py-8">لا توجد كتب في المفضلة</p>';
+
+                return;
+
+            }
+
+            favorites.forEach(book => {
+
+                const favoriteItem = document.createElement('div');
+
+                favoriteItem.className = 'flex items-center space-x-4 p-3 bg-gray-50 rounded-lg';
+
+                favoriteItem.innerHTML = `
+
+<img src="${book.image}" alt="${book.title}" class="w-16 h-16 object-cover rounded">
+
+<div class="flex-1">
+
+<h4 class="font-medium text-gray-800">${book.title}</h4>
+
+<p class="text-sm text-gray-600">${book.author}</p>
+
+<p class="text-sm font-bold text-indigo-600">${book.price} ر.ي</p>
+
+</div>
+
+<button class="remove-favorite-btn text-red-500 p-2" data-book-id="${book.id}">
+
+<i class="fas fa-times"></i>
+
+</button>
+
+`;
+
+                // Add event listener to remove button
+
+                const removeBtn = favoriteItem.querySelector('.remove-favorite-btn');
+
+                removeBtn.addEventListener('click', (e) => {
+
+                    e.stopPropagation();
+
+                    toggleFavorite({ id: book.id });
+
+                });
+
+                // Add event listener to view details
+
+                favoriteItem.addEventListener('click', () => {
+
+                    showBookDetails(book.id);
+
+                });
+
+                favoritesContainer.appendChild(favoriteItem);
+
+            });
+
+        }
+
+        // Add book to cart
+
+        function addToCart(book) {
+
+            const qty = parseInt(document.getElementById('book-qty').textContent);
+
+            // Check if book already in cart
+
+            const existingItemIndex = cart.findIndex(item => item.id === book.id);
+
+            if (existingItemIndex !== -1) {
+
+                // Update quantity
+
+                cart[existingItemIndex].quantity += qty;
+
+            } else {
+
+                // Add new item
+
+                cart.push({
+
+                    id: book.id,
+
+                    title: book.attributes.title,
+
+                    author: book.attributes.author,
+
+                    price: book.attributes.price,
+
+                    image: book.attributes.cover_image?.data?.attributes?.url
+
+                        ? `https://your-strapi-instance.com${book.attributes.cover_image.data.attributes.url}`
+
+                        : 'https://via.placeholder.com/300x400?text=No+Cover',
+
+                    quantity: qty
+
+                });
+
+            }
+
+            // Update localStorage
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+
+            // Update cart count
+
+            updateCartCount();
+
+            // Show success message
+
+            alert(`تمت إضافة "${book.attributes.title}" إلى سلة المشتريات`);
+
+            // Close modal if open
+
+            bookModal.classList.remove('show');
+
+            bookModal.classList.add('opacity-0');
+
+            bookModal.classList.add('pointer-events-none');
+
+            // Update cart sidebar if open
+
+            if (!cartSidebar.classList.contains('translate-x-full')) {
+
+                renderCartItems();
+
+            }
+
+        }
+
+        // Update cart count in header
+
+        function updateCartCount() {
+
+            const cartCount = document.getElementById('cart-count');
+
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+            if (totalItems > 0) {
+
+                cartCount.textContent = totalItems;
+
+                cartCount.classList.remove('hidden');
+
+            } else {
+
+                cartCount.classList.add('hidden');
+
+            }
+
+        }
+
+        // Render cart items in sidebar
+
+        function renderCartItems() {
+
+            const cartItemsContainer = document.getElementById('cart-items');
+
+            const cartTotalElement = document.getElementById('cart-total');
+
+            cartItemsContainer.innerHTML = '';
+
+            if (cart.length === 0) {
+
+                cartItemsContainer.innerHTML = '<p class="text-gray-500 text-center py-8">سلة المشتريات فارغة</p>';
+
+                cartTotalElement.textContent = '0 ر.ي';
+
+                return;
+
+            }
+
+            let total = 0;
+
+            cart.forEach((item, index) => {
+
+                const cartItem = document.createElement('div');
+
+                cartItem.className = 'flex items-center space-x-4 p-3 bg-gray-50 rounded-lg';
+
+                cartItem.innerHTML = `
+
+<img src="${item.image}" alt="${item.title}" class="w-16 h-16 object-cover rounded">
+
+<div class="flex-1">
+
+<h4 class="font-medium text-gray-800">${item.title}</h4>
+
+<p class="text-sm text-gray-600">${item.author}</p>
+
+<div class="flex items-center justify-between mt-1">
+
+<div class="flex items-center border rounded-lg overflow-hidden">
+
+<button class="px-2 py-1 bg-gray-200 hover:bg-gray-300 transition decrease-qty" data-index="${index}">-</button>
+
+<span class="px-3 py-1 text-sm">${item.quantity}</span>
+
+<button class="px-2 py-1 bg-gray-200 hover:bg-gray-300 transition increase-qty" data-index="${index}">+</button>
+
+</div>
+
+<p class="text-sm font-bold text-indigo-600">${item.price * item.quantity} ر.ي</p>
+
+</div>
+
+</div>
+
+<button class="remove-from-cart-btn text-red-500 p-2" data-index="${index}">
+
+<i class="fas fa-trash-alt"></i>
+
+</button>
+
+`;
+
+                // Add event listeners
+
+                const decreaseBtn = cartItem.querySelector('.decrease-qty');
+
+                const increaseBtn = cartItem.querySelector('.increase-qty');
+
+                const removeBtn = cartItem.querySelector('.remove-from-cart-btn');
+
+                decreaseBtn.addEventListener('click', () => updateCartItemQuantity(index, -1));
+
+                increaseBtn.addEventListener('click', () => updateCartItemQuantity(index, 1));
+
+                removeBtn.addEventListener('click', () => removeFromCart(index));
+
+                cartItemsContainer.appendChild(cartItem);
+
+                total += item.price * item.quantity;
+
+            });
+
+            cartTotalElement.textContent = `${total} ر.ي`;
+
+        }
+
+        // Update cart item quantity
+
+        function updateCartItemQuantity(index, change) {
+
+            const newQuantity = cart[index].quantity + change;
+
+            if (newQuantity < 1) {
+
+                removeFromCart(index);
+
+                return;
+
+            }
+
+            cart[index].quantity = newQuantity;
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+
+            updateCartCount();
+
+            renderCartItems();
+
+        }
+
+        // Remove item from cart
+
+        function removeFromCart(index) {
+
+            cart.splice(index, 1);
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+
+            updateCartCount();
+
+            renderCartItems();
+
+        }
+
+        // Proceed to checkout via WhatsApp
+
+        function proceedToCheckout() {
+
+            if (cart.length === 0) {
+
+                alert('سلة المشتريات فارغة');
+
+                return;
+
+            }
+
+            let message = 'مرحباً، أريد شراء الكتب التالية:\n\n';
+
+            cart.forEach(item => {
+
+                message += `- ${item.title} (${item.author}) - ${item.quantity} نسخة - ${item.price * item.quantity} ر.ي\n`;
+
+            });
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            message += `\nالمجموع الكلي: ${total} ر.ي\n\nشكراً!`;
+
+            const encodedMessage = encodeURIComponent(message);
+
+            const whatsappUrl = `https://wa.me/967772492426?text=${encodedMessage}`;
+
+            window.open(whatsappUrl, '_blank');
+
+        }
+
+        // Fetch news from Strapi API
+
+        async function fetchNews() {
+
+            const newsContainer = document.getElementById('news-container');
+
+            newsContainer.innerHTML = '';
+
+            // Show shimmer loading
+
+            for (let i = 0; i < 3; i++) {
+
+                const shimmerDiv = document.createElement('div');
+
+                shimmerDiv.className = 'shimmer h-24 rounded-lg';
+
+                newsContainer.appendChild(shimmerDiv);
+
+            }
+
+            try {
+
+                const response = await fetch(`${API_BASE_URL}/news?sort=publishedAt:desc&populate=*`, {
+
+                    headers: {
+
+                        'Authorization': `Bearer ${API_TOKEN}`
+
+                    }
+
+                });
+
+                const data = await response.json();
+
+                if (data.data) {
+
+                    currentNews = data.data;
+
+                    renderNews(currentNews);
+
+                }
+
+            } catch (error) {
+
+                console.error('Error fetching news:', error);
+
+                newsContainer.innerHTML = '<p class="text-red-500 text-center">حدث خطأ أثناء جلب الأخبار. يرجى المحاولة لاحقاً.</p>';
+
+            }
+
+        }
+
+        // Render news
+
+        function renderNews(newsItems) {
+
+            const newsContainer = document.getElementById('news-container');
+
+            newsContainer.innerHTML = '';
+
+            if (newsItems.length === 0) {
+
+                newsContainer.innerHTML = '<p class="text-gray-500 text-center">لا توجد أخبار حالياً.</p>';
+
+                return;
+
+            }
+
+            newsItems.forEach(news => {
+
+                const newsItem = document.createElement('div');
+
+                newsItem.className = 'bg-white rounded-lg shadow overflow-hidden news-item';
+
+                const publishedDate = new Date(news.attributes.publishedAt);
+
+                const formattedDate = publishedDate.toLocaleDateString('ar-YE', {
+
+                    year: 'numeric',
+
+                    month: 'long',
+
+                    day: 'numeric'
+
+                });
+
+                newsItem.innerHTML = `
+
+<div class="p-4">
+
+<div class="flex justify-between items-start mb-2">
+
+<h3 class="font-bold text-lg text-gray-800">${news.attributes.title}</h3>
+
+<span class="text-sm text-gray-500">${formattedDate}</span>
+
+</div>
+
+<div class="news-accordion-content">
+
+<p class="text-gray-700">${news.attributes.content}</p>
+
+<button class="mt-3 text-indigo-600 hover:text-indigo-800 transition read-more-btn" data-news-id="${news.id}">
+
+قراءة المزيد
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+                // Add event listener to read more button
+
+                const readMoreBtn = newsItem.querySelector('.read-more-btn');
+
+                readMoreBtn.addEventListener('click', () => showNewsDetails(news.id));
+
+                // Add click event to toggle accordion
+
+                const header = newsItem.querySelector('h3');
+
+                header.addEventListener('click', () => {
+
+                    const content = newsItem.querySelector('.news-accordion-content');
+
+                    if (content.style.maxHeight) {
+
+                        content.style.maxHeight = null;
+
+                    } else {
+
+                        content.style.maxHeight = content.scrollHeight + 'px';
+
+                    }
+
+                });
+
+                newsContainer.appendChild(newsItem);
+
+            });
+
+        }
+
+        // Show news details in modal
+
+        async function showNewsDetails(newsId) {
+
+            const newsItem = currentNews.find(n => n.id == newsId) ||
+
+                (await fetchNewsDetails(newsId));
+
+            if (!newsItem) return;
+
+            // Set modal content
+
+            document.getElementById('modal-news-title').textContent = newsItem.attributes.title;
+
+            const publishedDate = new Date(newsItem.attributes.publishedAt);
+
+            const formattedDate = publishedDate.toLocaleDateString('ar-YE', {
+
+                year: 'numeric',
+
+                month: 'long',
+
+                day: 'numeric',
+
+                hour: '2-digit',
+
+                minute: '2-digit'
+
+            });
+
+            document.getElementById('modal-news-date').textContent = formattedDate;
+
+            document.getElementById('modal-news-content').innerHTML = `
+
+<p>${newsItem.attributes.content}</p>
+
+`;
+
+            // Show modal
+
+            newsModal.classList.remove('opacity-0');
+
+            newsModal.classList.remove('pointer-events-none');
+
+            newsModal.classList.add('show');
+
+        }
+
+        // Fetch single news details
+
+        async function fetchNewsDetails(newsId) {
+
+            try {
+
+                const response = await fetch(`${API_BASE_URL}/news/${newsId}?populate=*`, {
+
+                    headers: {
+
+                        'Authorization': `Bearer ${API_TOKEN}`
+
+                    }
+
+                });
+
+                const data = await response.json();
+
+                return data.data;
+
+            } catch (error) {
+
+                console.error('Error fetching news details:', error);
+
+                return null;
+
+            }
+
+        }
+
+        // Utility function for debouncing
+
+        function debounce(func, wait) {
+
+            let timeout;
+
+            return function () {
+
+                const context = this;
+
+                const args = arguments;
+
+                clearTimeout(timeout);
+
+                timeout = setTimeout(() => {
+
+                    func.apply(context, args);
+
+                }, wait);
+
+            };
+
+        }
+
+    </script>
+
+</body>
+
+</html>
